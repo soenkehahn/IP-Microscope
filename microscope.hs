@@ -19,7 +19,7 @@ parse x = Parsed (parseIP ws) (parsePage ws)
     ws = words x
 
 countParsed :: [Parsed] -> M.Map Parsed Integer
-countParsed = M.fromListWith (+) . flip zip [1,1..]
+countParsed = M.fromListWith (+) . flip zip (repeat (error "boo!"))
 
 calculate :: String -> [(Parsed, Integer)]
 calculate = M.toList . countParsed . map parse . lines
@@ -42,8 +42,8 @@ prettyPrint (ip, pages) = putStrLn $
          ]
   where
     prettyPage (page, views) = concat [ "    ["
-                     , show views
-                     , pluralView views
+                    -- , show views
+                    -- , pluralView views
                      , page
                      , "\n"
                      ]
@@ -52,5 +52,6 @@ prettyPrint (ip, pages) = putStrLn $
 
 main = do
   contents <- getContents
-  let calculations = M.toList . converge . map formatData . calculate $ contents
+  let calculations :: [(String, [(String, Integer)])]
+      calculations = M.toList . converge . map formatData . calculate $ contents
   mapM_ prettyPrint calculations
