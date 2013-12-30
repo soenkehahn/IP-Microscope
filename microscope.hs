@@ -12,10 +12,11 @@ data Parsed = Parsed {
   } deriving (Show, Eq, Ord)
 
 parse :: String -> Parsed
-parse x = Parsed (parseIP x) (parsePage x)
+parse x = Parsed (parseIP ws) (parsePage ws)
   where
-    parseIP = head . words 
-    parsePage = (!! 10) . words
+    parseIP = head
+    parsePage ws = if length ws >= 11 then ws !! 10 else ws !! 8
+    ws = words x
 
 countParsed :: [Parsed] -> M.Map Parsed Integer
 countParsed = M.fromListWith (+) . flip zip [1,1..]
